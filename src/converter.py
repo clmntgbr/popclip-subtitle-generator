@@ -6,7 +6,6 @@ class ProtobufConverter:
     @staticmethod
     def json_to_protobuf(message: str) -> Clip:
         data = json.loads(message)
-        print(data)
 
         clip_data = data["clip"]
 
@@ -17,30 +16,34 @@ class ProtobufConverter:
         if "cover" in clip_data:
             clip.cover = clip_data["cover"]
 
-        video = Video()
-        video.id = clip_data["originalVideo"]["id"]
-        video.name = clip_data["originalVideo"]["name"]
-        video.originalName = clip_data["originalVideo"]["originalName"]
-        video.mimeType = clip_data["originalVideo"]["mimeType"]
-        video.size = int(clip_data["originalVideo"]["size"])
+        if "url" in clip_data:
+            clip.url = clip_data["url"]
 
-        if "length" in clip_data["originalVideo"]:
-            video.length = int(clip_data["originalVideo"]["length"])
+        if "originalVideo" in clip_data:
+            video = Video()
+            video.id = clip_data["originalVideo"]["id"]
+            video.name = clip_data["originalVideo"]["name"]
+            video.originalName = clip_data["originalVideo"]["originalName"]
+            video.mimeType = clip_data["originalVideo"]["mimeType"]
+            video.size = int(clip_data["originalVideo"]["size"])
 
-        if "audios" in clip_data["originalVideo"]:
-            video.audios.extend(clip_data["originalVideo"]["audios"])
+            if "length" in clip_data["originalVideo"]:
+                video.length = int(clip_data["originalVideo"]["length"])
 
-        if "subtitles" in clip_data["originalVideo"]:
-            video.subtitles.extend(clip_data["originalVideo"]["subtitles"])
+            if "audios" in clip_data["originalVideo"]:
+                video.audios.extend(clip_data["originalVideo"]["audios"])
 
-        if "ass" in clip_data["originalVideo"]:
-            video.ass = clip_data["originalVideo"]["ass"]
+            if "subtitles" in clip_data["originalVideo"]:
+                video.subtitles.extend(clip_data["originalVideo"]["subtitles"])
 
-        if "subtitle" in clip_data["originalVideo"]:
-            video.subtitle = clip_data["originalVideo"]["subtitle"]
+            if "ass" in clip_data["originalVideo"]:
+                video.ass = clip_data["originalVideo"]["ass"]
 
-        video.IsInitialized()
-        clip.originalVideo.CopyFrom(video)
+            if "subtitle" in clip_data["originalVideo"]:
+                video.subtitle = clip_data["originalVideo"]["subtitle"]
+
+            video.IsInitialized()
+            clip.originalVideo.CopyFrom(video)
 
         if "processedVideo" in clip_data:
             processed_video = Video()

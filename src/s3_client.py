@@ -1,14 +1,17 @@
 import boto3
+from botocore.config import Config
 
 
 class S3Client:
     def __init__(self, config):
+        custom_config = Config(retries={'max_attempts': 5, 'mode': 'standard'})
         self.client = boto3.client(
             "s3",
             aws_access_key_id=config.S3_ACCESS_KEY,
             aws_secret_access_key=config.S3_SECRET_KEY,
             endpoint_url=config.S3_ENDPOINT,
             region_name=config.S3_REGION,
+            config=custom_config
         )
         self.bucket_name = config.S3_BUCKET_NAME
 
