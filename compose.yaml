@@ -1,0 +1,23 @@
+services:
+    subtitle-generator:
+        container_name: ${PROJECT_NAME}-subtitle-generator
+        env_file:
+            - .env.local
+        build:
+            dockerfile: ./Dockerfile
+            args:
+                SERVICE_PORT: 5000
+                SERVICE_NAME: subtitle-generator
+        restart: unless-stopped
+        networks:
+            - api_network
+        volumes:
+            - ./:/app
+        command: celery -A src.main.celery worker --loglevel=info --queues=subtitle_generator
+        ports:
+            - "5002:5000"
+
+networks:
+  api_network:
+    name: api_network
+    driver: bridge

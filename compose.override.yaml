@@ -1,0 +1,9 @@
+# Development environment override
+services:
+  subtitle-generator:
+      build:
+          dockerfile: ./Dockerfile
+          target: dev
+          args:
+              SERVICE_PORT: 5000
+              SERVICE_NAME: subtitle-generator
